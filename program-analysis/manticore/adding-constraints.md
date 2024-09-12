@@ -2,21 +2,25 @@
 
 **Table of contents:**
 
-- [Introduction](#introduction)
-- [Operators](#Operators)
-- [Constraints](#constraints)
-- [Checking Constraint](#checking-constraint)
-- [Summary: Adding Constraints](#summary-adding-constraints)
+- [Adding Constraints](#adding-constraints)
+  - [Introduction](#introduction)
+  - [Operators](#operators)
+  - [Constraints](#constraints)
+    - [Global constraint](#global-constraint)
+    - [State constraint](#state-constraint)
+  - [Checking Constraint](#checking-constraint)
+  - [Summary: Adding Constraints](#summary-adding-constraints)
 
 ## Introduction
 
 We will see how to constrain the exploration. We will make the assumption that the
-documentation of `f()` states that the function is never called with `a == 65`, so any bug with `a == 65` is not a real bug. The target is still the following smart contract (*[examples/example.sol](./examples/example.sol)*):
+documentation of `f()` states that the function is never called with `a == 65`, so any bug with `a == 65` is not a real bug. The target is still the following smart contract (_[example.sol](https://github.com/crytic/building-secure-contracts/tree/master/program-analysis/manticore/examples/example.sol)_):
 
-```Solidity
+```solidity
 pragma solidity >=0.4.24 <0.6.0;
+
 contract Simple {
-    function f(uint a) payable public{
+    function f(uint256 a) public payable {
         if (a == 65) {
             revert();
         }
@@ -47,7 +51,6 @@ from manticore.core.smtlib import Operators
 last_return = Operators.CONCAT(256, *last_return)
 ```
 
-
 ## Constraints
 
 You can use constraints globally or for a specific state.
@@ -68,13 +71,13 @@ m.transaction(caller=user_account,
 
 ### State constraint
 
-Use [state.constrain(constraint)](https://manticore.readthedocs.io/en/latest/api.html?highlight=operator#manticore.core.state.StateBase.constrain) to add a constraint to a specific state
+Use [state.constrain(constraint)](https://manticore.readthedocs.io/en/latest/states.html?highlight=statebase#manticore.core.state.StateBase.constrain) to add a constraint to a specific state
 It can be used to constrain the state after its exploration to check some property on it.
 
 ## Checking Constraint
 
-Use `solver.check(state.constraints)` to know if a constraint is still feasible. 
-For example, the following will constraint  symbolic_value to be different from 65 and check if the state is still feasible:
+Use `solver.check(state.constraints)` to know if a constraint is still feasible.
+For example, the following will constraint symbolic_value to be different from 65 and check if the state is still feasible:
 
 ```python3
 state.constrain(symbolic_var != 65)
@@ -119,6 +122,6 @@ if no_bug_found:
     print(f'No bug found')
 ```
 
-All the code above you can find into the [examples/example_constraint.py](./examples/example_constraint.py)
+All the code above you can find into the [example_constraint.py](https://github.com/crytic/building-secure-contracts/tree/master/program-analysis/manticore/examples/example_constraint.py)
 
-The next step is to follow the [exercises](./exercises.md).
+The next step is to follow the [exercises](./exercises).

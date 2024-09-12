@@ -1,12 +1,12 @@
-# Exercice 2 : Arithmetic on multi transactions
+# Exercise 2 : Arithmetic overflow through multiple transactions
 
 Use Manticore to find if an overflow is possible in Overflow.add. Propose a fix of the contract, and test your fix using your Manticore script.
 
 ## Proposed scenario
 
-Follow the pattern initilization, exploration and property for the script.
+Follow the pattern initialization, exploration and property for the script.
 
-### Initialization
+## Initialization
 
 - Create one user account
 - Create the contract account
@@ -20,7 +20,7 @@ Follow the pattern initilization, exploration and property for the script.
 
 - Check if it is possible for the value returned by sellerBalance() to be lower than the first input.
 
-## Hints:
+## Hints
 
 - The value returned by the last transaction can be accessed through:
 
@@ -31,11 +31,11 @@ state.platform.transactions[-1].return_data
 - The data returned needs to be deserialized:
 
 ```python
-data = ABI.deserialize("uint", data)
+data = ABI.deserialize("uint256", data)
 ```
 
-- You can use the template proposed in [exercise2/template.sol](./exercise2/template.sol)
+- You can use the template proposed in [template.py](https://github.com/crytic/building-secure-contracts/tree/master/program-analysis/manticore/exercises/exercise2/template.py)
 
-### Solution
+## Solution
 
-[exercise2/solution.py](./exercise2/solution.py).
+[solution.py](https://github.com/crytic/building-secure-contracts/tree/master/program-analysis/manticore/exercises/exercise2/solution.py).

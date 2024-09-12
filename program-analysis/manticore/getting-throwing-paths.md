@@ -2,20 +2,22 @@
 
 **Table of contents:**
 
-- [Introduction](#introduction)
-- [Using state information](#using-state-information)
-- [How to generate testcase](#how-to-generate-testcase)
-- [Summary: Getting Throwing Path](#summary-getting-throwing-path)
-
+- [Getting Throwing Path](#getting-throwing-path)
+  - [Introduction](#introduction)
+  - [Using state information](#using-state-information)
+  - [How to generate testcase](#how-to-generate-testcase)
+  - [Summary](#summary)
+  - [Summary: Getting Throwing Path](#summary-getting-throwing-path)
 
 ## Introduction
 
-We will now improve [the previous example](running-under-manticore.md) and generate specific inputs for the paths raising an exception in `f()`. The target is still the following smart contract (*[examples/example.sol](./examples/example.sol)*):
+We will now improve [the previous example](running-under-manticore.md) and generate specific inputs for the paths raising an exception in `f()`. The target is still the following smart contract (_[example.sol](https://github.com/crytic/building-secure-contracts/tree/master/program-analysis/manticore/examples/example.sol)_):
 
-```Solidity
+```solidity
 pragma solidity >=0.4.24 <0.6.0;
+
 contract Simple {
-    function f(uint a) payable public{
+    function f(uint256 a) public payable {
         if (a == 65) {
             revert();
         }
@@ -46,12 +48,12 @@ The data returned by the last transaction is an array, which can be converted to
 
 ```python
 data = state.platform.transactions[0].return_data
-data = ABI.deserialize("uint", data)
+data = ABI.deserialize("uint256", data)
 ```
 
 ## How to generate testcase
 
-Use [m.generate_testcase(state, name)](https://manticore.readthedocs.io/en/latest/api.html#manticore.ethereum.ManticoreEVM.generate_testcase) to generate testcase:
+Use [m.generate_testcase(state, name)](https://github.com/trailofbits/manticore/blob/dc8c3c822bbd50adabe50cafef38457505c0bc7b/manticore/ethereum/manticore.py#L1572) to generate testcase:
 
 ```python3
 m.generate_testcase(state, 'BugFound')
@@ -89,9 +91,8 @@ for state in m.terminated_states:
         m.generate_testcase(state, 'ThrowFound')
 ```
 
-All the code above you can find into the [examples/example_throw.py](./examples/example_throw.py)
+All the code above you can find into the [example_throw.py](https://github.com/crytic/building-secure-contracts/tree/master/program-analysis/manticore/examples/example_throw.py)
 
 The next step is to [add constraints](./adding-constraints.md) to the state.
 
-*Note we could have generated a much simpler script, as all the states returned by terminated_state have REVERT or INVALID in their result: this example was only meant to demonstrate how to manipulate the API.*
-
+_Note we could have generated a much simpler script, as all the states returned by terminated_state have REVERT or INVALID in their result: this example was only meant to demonstrate how to manipulate the API._

@@ -1,16 +1,21 @@
-import "mintable.sol";
+// SPDX-License-Identifier: AGPL-3.0
+pragma solidity ^0.8.0;
 
-/// @dev to run: $ echidna-test solution.sol --contract TestToken
+import "./mintable.sol";
+
+/// @dev Run the solution with
+///      ```
+///      solc-select use 0.8.0
+///      echidna program-analysis/echidna/exercises/exercise3/solution.sol --contract TestToken
+///      ```
 contract TestToken is MintableToken {
-    address echidna_caller = msg.sender;
+    address echidna = msg.sender;
 
-    // update the constructor
-    constructor() public MintableToken(10000) {
-        owner = echidna_caller;
+    constructor() MintableToken(10_000) {
+        owner = echidna;
     }
 
-    // add the property
     function echidna_test_balance() public view returns (bool) {
-        return balances[msg.sender] <= 10000;
+        return balances[msg.sender] <= 10_000;
     }
 }
